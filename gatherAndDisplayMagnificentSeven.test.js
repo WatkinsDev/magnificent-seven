@@ -10,9 +10,14 @@ describe('Gather and display', function() {
       jasmine.Ajax.uninstall();
     });
     
-    it('getPlayerCallsExpectedUrl', function() {
+    it('getPlayerCallsExpectedUrlForPlayers', function() {
         getPlayersFromFantasyPremierLeagueApi();
         expect(jasmine.Ajax.requests.mostRecent().url).toBe('https://fantasy.premierleague.com/iq/elements/');
+    });
+
+    it('getPlayerCallsExpectedUrlForPositions', function() {
+        getPlayerPositionsFromFantasyPremierLeagueApi();
+        expect(jasmine.Ajax.requests.mostRecent().url).toBe('https://fantasy.premierleague.com/iq/element-types/');
     });
 
     describe("Get Players", function() {
@@ -43,4 +48,19 @@ describe('Gather and display', function() {
             expect(players[4].magnificence).toBe(20);
         });
     });
-  });
+
+    describe("Get Positions", function() {
+        beforeEach(function() {
+            getPlayerPositionsFromFantasyPremierLeagueApi();
+            request = jasmine.Ajax.requests.mostRecent();
+            request.respondWith(TestResponses.getPlayerPositions.success);
+        });
+
+        it('when GetPlayersPositions is called the expected test response is called when tests are ezecuted', function() {
+            getPlayerPositionsFromFantasyPremierLeagueApi();
+            expect(getPlayerPositionsCount()).toBe(JSON.parse(TestResponses.getPlayerPositions.success.responseText).length);
+            console.log(getPlayerPositions()[0].singular_name);
+            expect(getPlayerPositions()[0].singular_name).toBe("Made up position name");
+        });
+    });    
+});

@@ -1,4 +1,5 @@
 var players;
+var positions;
 
 displayMagnificent7 = function(){
     getPlayersFromFantasyPremierLeagueApi();    
@@ -36,8 +37,19 @@ getPlayersFromFantasyPremierLeagueApi = function(){
   
   var newXHR = new XMLHttpRequest();
   newXHR.addEventListener( 'load', getPlayersSuccessHandler );
-  newXHR.open( 'GET', 'https://fantasy.premierleague.com/iq/elements/' );
+  newXHR.open('GET', 'https://fantasy.premierleague.com/iq/elements/');
   newXHR.send();
+}
+
+getPlayerPositionsFromFantasyPremierLeagueApi = function(){
+    function getPlayerPositionsSuccessHandler() {
+        positions = JSON.parse(this.responseText);
+    }
+    
+    var newXHR = new XMLHttpRequest();
+    newXHR.addEventListener('load', getPlayerPositionsSuccessHandler);
+    newXHR.open('GET', 'https://fantasy.premierleague.com/iq/element-types/');
+    newXHR.send();        
 }
 
 getPlayerCount = function(){
@@ -46,4 +58,12 @@ getPlayerCount = function(){
 
 getPlayers = function(){
     return players;
+}
+
+getPlayerPositionsCount = function(){
+    return positions.length;
+}
+
+getPlayerPositions = function(){
+    return positions;
 }

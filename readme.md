@@ -21,6 +21,7 @@ This is my attempt at creating a "Mangnificent 7" for the fantasy premier league
 - Responsiveness
 - Tested
 - Limit/reduce api reads
+- Error handling
 
 **Potential Enhancements (reword these to ensure they are baseda round their intention. "Quick epic (large story) requirement discussion with product managers could turn these into desired value and not solution**
 - Internationalisation and accessibility scan
