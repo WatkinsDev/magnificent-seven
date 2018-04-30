@@ -1,8 +1,10 @@
 var players;
 var positions;
+var groupedPlayers = {};
 
 displayMagnificent7 = function(){
-    getPlayersFromFantasyPremierLeagueApi();    
+    getPlayersFromFantasyPremierLeagueApi();
+    getPlayerPositionsFromFantasyPremierLeagueApi();    
 }
 
 addPlayerToDom = function(player){
@@ -66,4 +68,21 @@ getPlayerPositionsCount = function(){
 
 getPlayerPositions = function(){
     return positions;
+}
+
+groupPlayers = function(){
+    console.log("About to groupPlayers");
+    for(i=0; i < positions.length; i++){
+        //Could create javascript object
+        var newGrouping = {id:positions[i].id, group:positions[i], players:[]};
+        groupedPlayers[positions[i].id] = newGrouping;
+    }
+    for(i=0; i < players.length; i++){
+        groupedPlayers[players[i].element_type]['players'].push(players[i]);
+    }
+    console.log("Finished groupPlayers");
+}
+
+getGroupedPlayers = function(){
+    return groupedPlayers;
 }
