@@ -86,6 +86,22 @@ describe('Gather and display magnificant seven', function() {
         });
     });    
 
+    describe("Data Formatting", function() {
+        it('when sortGroupedPlayers is called the players are sorted as expected', function() {
+            //given
+            positions = [{id:99}]
+            groupedPlayers={99:{players:[{id:1,magnificence:5},{id:9,magnificence:2},{id:76,magnificence:99}]}};
+            
+            //when I request players sorted by group
+            sortGroupedPlayers();
+
+            //and I get expeccted number of players for each group
+            expect(getGroupedPlayers()[99].players[0].id).toBe(76);
+            expect(getGroupedPlayers()[99].players[1].id).toBe(1);
+            expect(getGroupedPlayers()[99].players[2].id).toBe(9);
+        });
+    });    
+
     describe("Data display", function() {
         it('when display players is called each one is added to the dom', function() {
             //given

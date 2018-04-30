@@ -8,9 +8,9 @@ This is my attempt at creating a "Mangnificent 7" for the fantasy premier league
 **Stories Completed**
 0.5 Display full list of players
 0.5 Calculate and display magnificence (goals + assists) per player 
+0.5 Group players by position
 
 **Story Backlog**
-0.5 Group players by position
 0.5 Limit display to 1 keeper, 2 defenders, 3 midfielders and 1 forward
 0.5 Display player team
 0.5 Display calculation
@@ -24,6 +24,7 @@ This is my attempt at creating a "Mangnificent 7" for the fantasy premier league
 - Error handling
 
 **Potential Enhancements (reword these to ensure they are baseda round their intention. "Quick epic (large story) requirement discussion with product managers could turn these into desired value and not solution**
+- Cover "unhappy path" scenarios with tests and display 
 - Internationalisation and accessibility scan
 - Value
 - Team inclusion
@@ -40,6 +41,8 @@ This is my attempt at creating a "Mangnificent 7" for the fantasy premier league
 - Players overachieving?
 
 **Potential technical enhancements**
+- Change to spread to run all api calls at once
+- Loop less
 - Filter on elements?
 - Caching of data (aimed towards static loading of screens where necessary)
 - Performance testing 'framework'

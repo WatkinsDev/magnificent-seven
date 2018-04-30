@@ -3,8 +3,19 @@ var positions;
 var groupedPlayers = {};
 
 displayMagnificent7 = function(){
-    getPlayersFromFantasyPremierLeagueApi();
-    getPlayerPositionsFromFantasyPremierLeagueApi();    
+    getPlayersFromFantasyPremierLeagueApi().then(function(){
+        return getPlayerPositionsFromFantasyPremierLeagueApi();
+    }).then(function(){
+        return calculateMagnificence();
+    }).then(function(){
+        return groupPlayers();
+    }).then(function(){
+        return sortGroupedPlayers();
+    }).then(function(){
+        console.log('Finished Loading Initial View Model');
+    });
+    
+    // displayPlayers();
 }
 
 addPlayerToDom = function(player){
@@ -14,7 +25,7 @@ addPlayerToDom = function(player){
     document.body.appendChild(el.firstChild); 
 };
 
-displayPlayers = function(players){
+displayPlayers = function(){
     console.log("About to display players");
     for(i=0; i<players.length; i++){
         addPlayerToDom(players[i]);
@@ -22,36 +33,47 @@ displayPlayers = function(players){
     console.log("Finished displaying players");
 }
 
-calculateMagnificence = function(players){
-    console.log("About to calculate magnificence");
-    for(i=0; i<players.length; i++){
-        players[i].magnificence = players[i].goals_scored + players[i].assists;
-    }
-    console.log("Finished calculating magnificence");
+calculateMagnificence = function(){
+    return new Promise(function(resolve, reject) {
+        console.log("About to calculate magnificence");
+        for(i=0; i<players.length; i++){
+            players[i].magnificence = players[i].goals_scored + getPlayers()[i].assists;
+        }
+        console.log("Finished calculating magnificence");
+        resolve();
+    });
 }
 
 getPlayersFromFantasyPremierLeagueApi = function(){ 
-  function getPlayersSuccessHandler () {
-    players = JSON.parse(this.responseText);
-    calculateMagnificence(players);
-    displayPlayers(players);
-  }
-  
-  var newXHR = new XMLHttpRequest();
-  newXHR.addEventListener( 'load', getPlayersSuccessHandler );
-  newXHR.open('GET', 'https://fantasy.premierleague.com/iq/elements/');
-  newXHR.send();
+    return new Promise(function(resolve, reject) {
+        console.log("About to get players from api");
+        function getPlayersSuccessHandler () {
+            players = JSON.parse(this.responseText);
+            resolve();
+            console.log("Finished get players from api");
+        }
+        
+        var newXHR = new XMLHttpRequest();
+        newXHR.addEventListener( 'load', getPlayersSuccessHandler );
+        newXHR.open('GET', 'https://fantasy.premierleague.com/iq/elements/');
+        newXHR.send();
+    });
 }
 
 getPlayerPositionsFromFantasyPremierLeagueApi = function(){
-    function getPlayerPositionsSuccessHandler() {
-        positions = JSON.parse(this.responseText);
-    }
-    
-    var newXHR = new XMLHttpRequest();
-    newXHR.addEventListener('load', getPlayerPositionsSuccessHandler);
-    newXHR.open('GET', 'https://fantasy.premierleague.com/iq/element-types/');
-    newXHR.send();        
+    return new Promise(function(resolve, reject) {
+        console.log("About to get positions from api");
+        function getPlayerPositionsSuccessHandler() {
+            positions = JSON.parse(this.responseText);       
+            console.log("Finished get positions from api");
+            resolve();
+        }
+        
+        var newXHR = new XMLHttpRequest();
+        newXHR.addEventListener('load', getPlayerPositionsSuccessHandler);
+        newXHR.open('GET', 'https://fantasy.premierleague.com/iq/element-types/');
+        newXHR.send();
+    }); 
 }
 
 getPlayerCount = function(){
@@ -71,16 +93,32 @@ getPlayerPositions = function(){
 }
 
 groupPlayers = function(){
-    console.log("About to groupPlayers");
-    for(i=0; i < positions.length; i++){
-        //Could create javascript object
-        var newGrouping = {id:positions[i].id, group:positions[i], players:[]};
-        groupedPlayers[positions[i].id] = newGrouping;
-    }
-    for(i=0; i < players.length; i++){
-        groupedPlayers[players[i].element_type]['players'].push(players[i]);
-    }
-    console.log("Finished groupPlayers");
+    return new Promise(function(resolve, reject) {
+        console.log("About to groupPlayers");
+        for(i=0; i < positions.length; i++){
+            //Could create javascript object
+            var newGrouping = {id:positions[i].id, group:positions[i], players:[]};
+            groupedPlayers[positions[i].id] = newGrouping;
+        }
+        for(i=0; i < players.length; i++){
+            groupedPlayers[players[i].element_type]['players'].push(players[i]);
+        }
+        console.log("Finished groupPlayers");
+        resolve();
+    });
+}
+
+sortGroupedPlayers = function(){
+    return new Promise(function(resolve, reject) {
+        console.log("About to sort grouped players");
+        for(i=0; i < positions.length; i++){
+            groupedPlayers[positions[i].id]['players'] = groupedPlayers[positions[i].id]['players'].sort(function(a, b) {
+                return b['magnificence'] - a['magnificence'];
+            });
+            }
+        console.log("Finished sorting grouped players"); 
+        resolve();
+    });
 }
 
 getGroupedPlayers = function(){
