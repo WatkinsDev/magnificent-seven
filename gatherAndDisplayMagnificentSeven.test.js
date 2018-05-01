@@ -84,9 +84,7 @@ describe('Gather and display magnificant seven', function() {
             expect(getGroupedPlayers()[2].players.length).toBe(3);
             expect(getGroupedPlayers()[3].players.length).toBe(1);
         });
-    });    
-
-    describe("Data Formatting", function() {
+ 
         it('when sortGroupedPlayers is called the players are sorted as expected', function() {
             //given
             positions = [{id:99}]
@@ -95,10 +93,50 @@ describe('Gather and display magnificant seven', function() {
             //when I request players sorted by group
             sortGroupedPlayers();
 
-            //and I get expeccted number of players for each group
+            //I get expeccted number of players for each group
             expect(getGroupedPlayers()[99].players[0].id).toBe(76);
             expect(getGroupedPlayers()[99].players[1].id).toBe(1);
             expect(getGroupedPlayers()[99].players[2].id).toBe(9);
+        });
+ 
+        it('when prepareViewModel is called the necessary player counts per position are correct', function() {
+            //given
+            positions = JSON.parse(TestResponses.getPlayerPositions.success.responseText);
+            players = [];
+            players[0] = {element_type:1};
+            players[1] = {element_type:1};
+            players[2] = {element_type:1};
+            players[3] = {element_type:1};
+            players[4] = {element_type:2};
+            players[5] = {element_type:2};
+            players[6] = {element_type:2};
+            players[7] = {element_type:2};
+            players[8] = {element_type:3};
+            players[9] = {element_type:3};
+            players[10] = {element_type:3};
+            players[11] = {element_type:3};
+            players[12] = {element_type:4};
+            players[13] = {element_type:4};
+            players[14] = {element_type:4};
+            players[15] = {element_type:4};
+            groupPlayers();
+            
+
+            //when I prepare the view model
+            prepareViewModel();
+
+            //I get the expeccted number of players for each group
+            expect(getGroupedPlayers()[1].group.singular_name_short).toBe("GKP");
+            expect(getGroupedPlayers()[1].players.length).toBe(1);
+            
+            expect(getGroupedPlayers()[2].group.singular_name_short).toBe("DEF");
+            expect(getGroupedPlayers()[2].players.length).toBe(2);
+
+            expect(getGroupedPlayers()[3].group.singular_name_short).toBe("MID");
+            expect(getGroupedPlayers()[3].players.length).toBe(3);
+
+            expect(getGroupedPlayers()[4].group.singular_name_short).toBe("FWD");
+            expect(getGroupedPlayers()[4].players.length).toBe(1);
         });
     });    
 

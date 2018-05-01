@@ -12,6 +12,8 @@ displayMagnificent7 = function(){
     }).then(function(){
         return sortGroupedPlayers();
     }).then(function(){
+        return prepareViewModel();
+    }).then(function(){
         console.log('Finished Loading Initial View Model');
     });
     
@@ -117,6 +119,25 @@ sortGroupedPlayers = function(){
             });
             }
         console.log("Finished sorting grouped players"); 
+        resolve();
+    });
+}
+
+prepareViewModel = function(){
+    return new Promise(function(resolve, reject) {
+        console.log("Starting to prepare view model"); 
+        for(i=0; i < positions.length; i++){
+            if(positions[i].singular_name_short === "GKP"){
+                groupedPlayers[positions[i].id]['players'] = groupedPlayers[positions[i].id]['players'].slice(0,1);
+            }else if (positions[i].singular_name_short === "DEF"){
+                groupedPlayers[positions[i].id]['players'] = groupedPlayers[positions[i].id]['players'].slice(0,2);
+            }else if (positions[i].singular_name_short === "MID"){
+                groupedPlayers[positions[i].id]['players'] = groupedPlayers[positions[i].id]['players'].slice(0,3);
+            }else if (positions[i].singular_name_short === "FWD"){
+                groupedPlayers[positions[i].id]['players'] = groupedPlayers[positions[i].id]['players'].slice(0,1);
+            }
+        }
+        console.log("Finished prepare view model"); 
         resolve();
     });
 }
