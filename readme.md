@@ -18,7 +18,7 @@ This is my attempt at creating a "Mangnificent 7" for the fantasy premier league
 
 - 0.5 Display player team
 - 0.5 Display calculation
-- 1 Basic position decoration
+
 
 - See below for further enhancements to potential be added to the backlog 
 
