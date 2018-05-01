@@ -6,17 +6,20 @@ This is my attempt at creating a "Mangnificent 7" for the fantasy premier league
 - Could calculate magnificence on the server side to prevent repeated client side calculation
 
 **Stories Completed**
-0.5 Display full list of players
-0.5 Calculate and display magnificence (goals + assists) per player 
-0.5 Group players by position
-0.5 Sort players by magnificence
-0.5 Limit display to 1 keeper, 2 defenders, 3 midfielders and 1 forward
+- 0.5 Display full list of players
+- 0.5 Calculate and display magnificence (goals + assists) per player 
+- 0.5 Group players by position
+- 0.5 Sort players by magnificence
+- 0.5 Limit display to 1 keeper, 2 defenders, 3 midfielders and 1 forward
+- 1 Basic position decoration
+- 1 Basic team decoration
 
 **Story Backlog**
-1 Beutify position decoration
-1 Beutify team decoration
-0.5 Display player team
-0.5 Display calculation
+
+- 0.5 Display player team
+- 0.5 Display calculation
+- 1 Basic position decoration
+
 - See below for further enhancements to potential be added to the backlog 
 
 **Cross cutting concerns**
