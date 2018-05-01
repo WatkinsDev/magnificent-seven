@@ -20,10 +20,10 @@
         }).then(function(){
             return prepareViewModel();
         }).then(function(){
-            console.log('Finished Loading Initial View Model');
+            return addPlayersToDomInAbsenceOfTemplating();
+        }).then(function(){
+            console.log('Finished Loading Magnificent Seven');
         });
-        
-        // displayPlayers();
     }
 
     getPlayersFromFantasyPremierLeagueApi = function(){ 
@@ -122,16 +122,18 @@
     }
 
     addPlayersToDomInAbsenceOfTemplating = function(player){
-        for(i=0; i < positions.length; i++){
-            var positionDiv = document.createElement('div');
-            positionDiv.className = 'positionContainer';
-            var domString = "";
-            for(k=0; k < groupedPlayers[positions[i].id]['players'].length; k++){
-                domString = domString + getPlayerDisplaySpanText(groupedPlayers[positions[i].id]['players'][k]); 
+        return new Promise(function(resolve, reject) {
+            for(i=0; i < positions.length; i++){
+                var positionDiv = document.createElement('div');
+                positionDiv.className = 'positionContainer';
+                var domString = "";
+                for(k=0; k < groupedPlayers[positions[i].id]['players'].length; k++){
+                    domString = domString + getPlayerDisplaySpanText(groupedPlayers[positions[i].id]['players'][k]); 
+                }
+                positionDiv.innerHTML = domString;
+                document.body.appendChild(positionDiv);
             }
-            positionDiv.innerHTML = domString;
-            document.body.appendChild(positionDiv);
-        }
+        });
     }
 
     getGroupedPlayers = function(){
