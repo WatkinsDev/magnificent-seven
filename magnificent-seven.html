@@ -1,0 +1,172 @@
+<div id="manificentSevenContainer">
+    <div id="header">
+
+    </div>
+</div>
+<script>
+    var players;
+    var positions;
+    var groupedPlayers = {};
+
+    displayMagnificent7 = function(){
+        getPlayersFromFantasyPremierLeagueApi().then(function(){
+            return getPlayerPositionsFromFantasyPremierLeagueApi();
+        }).then(function(){
+            return calculateMagnificence();
+        }).then(function(){
+            return groupPlayers();
+        }).then(function(){
+            return sortGroupedPlayers();
+        }).then(function(){
+            return prepareViewModel();
+        }).then(function(){
+            console.log('Finished Loading Initial View Model');
+        });
+        
+        // displayPlayers();
+    }
+
+    getPlayersFromFantasyPremierLeagueApi = function(){ 
+        return new Promise(function(resolve, reject) {
+            console.log("About to get players from api");
+            function getPlayersSuccessHandler () {
+                players = JSON.parse(this.responseText);
+                resolve();
+                console.log("Finished get players from api");
+            }
+            
+            var newXHR = new XMLHttpRequest();
+            newXHR.addEventListener( 'load', getPlayersSuccessHandler );
+            newXHR.open('GET', 'https://fantasy.premierleague.com/iq/elements/');
+            newXHR.send();
+        });
+    }
+
+    getPlayerPositionsFromFantasyPremierLeagueApi = function(){
+        return new Promise(function(resolve, reject) {
+            console.log("About to get positions from api");
+            function getPlayerPositionsSuccessHandler() {
+                positions = JSON.parse(this.responseText);       
+                console.log("Finished get positions from api");
+                resolve();
+            }
+            
+            var newXHR = new XMLHttpRequest();
+            newXHR.addEventListener('load', getPlayerPositionsSuccessHandler);
+            newXHR.open('GET', 'https://fantasy.premierleague.com/iq/element-types/');
+            newXHR.send();
+        }); 
+    }
+
+    calculateMagnificence = function(){
+        return new Promise(function(resolve, reject) {
+            console.log("About to calculate magnificence");
+            for(i=0; i<players.length; i++){
+                players[i].magnificence = players[i].goals_scored + getPlayers()[i].assists;
+            }
+            console.log("Finished calculating magnificence");
+            resolve();
+        });
+    }
+
+    groupPlayers = function(){
+        return new Promise(function(resolve, reject) {
+            console.log("About to groupPlayers");
+            for(i=0; i < positions.length; i++){
+                //Could create javascript object
+                var newGrouping = {id:positions[i].id, group:positions[i], players:[]};
+                groupedPlayers[positions[i].id] = newGrouping;
+            }
+            for(i=0; i < players.length; i++){
+                groupedPlayers[players[i].element_type]['players'].push(players[i]);
+            }
+            console.log("Finished groupPlayers");
+            resolve();
+        });
+    }
+
+    sortGroupedPlayers = function(){
+        return new Promise(function(resolve, reject) {
+            console.log("About to sort grouped players");
+            for(i=0; i < positions.length; i++){
+                groupedPlayers[positions[i].id]['players'] = groupedPlayers[positions[i].id]['players'].sort(function(a, b) {
+                    return b['magnificence'] - a['magnificence'];
+                });
+                }
+            console.log("Finished sorting grouped players"); 
+            resolve();
+        });
+    }
+
+    prepareViewModel = function(){
+        return new Promise(function(resolve, reject) {
+            console.log("Starting to prepare view model"); 
+            for(i=0; i < positions.length; i++){
+                if(positions[i].singular_name_short === "GKP"){
+                    groupedPlayers[positions[i].id]['players'] = groupedPlayers[positions[i].id]['players'].slice(0,1);
+                }else if (positions[i].singular_name_short === "DEF"){
+                    groupedPlayers[positions[i].id]['players'] = groupedPlayers[positions[i].id]['players'].slice(0,2);
+                }else if (positions[i].singular_name_short === "MID"){
+                    groupedPlayers[positions[i].id]['players'] = groupedPlayers[positions[i].id]['players'].slice(0,3);
+                }else if (positions[i].singular_name_short === "FWD"){
+                    groupedPlayers[positions[i].id]['players'] = groupedPlayers[positions[i].id]['players'].slice(0,1);
+                }
+            }
+            console.log("Finished prepare view model"); 
+            resolve();
+        });
+    }
+
+    getPlayerDisplaySpanText = function(currentPlayer){
+        return '<span class="playerContainer">'+currentPlayer.first_name+' '+currentPlayer.second_name+'<br>('+currentPlayer.magnificence+')</span>';
+    }
+
+    addPlayersToDomInAbsenceOfTemplating = function(player){
+        for(i=0; i < positions.length; i++){
+            var positionDiv = document.createElement('div');
+            positionDiv.className = 'positionContainer';
+            var domString = "";
+            for(k=0; k < groupedPlayers[positions[i].id]['players'].length; k++){
+                domString = domString + getPlayerDisplaySpanText(groupedPlayers[positions[i].id]['players'][k]); 
+            }
+            positionDiv.innerHTML = domString;
+            document.body.appendChild(positionDiv);
+        }
+    }
+
+    getGroupedPlayers = function(){
+        return groupedPlayers;
+    }
+
+
+    getPlayerCount = function(){
+        return players.length;
+    }
+
+    getPlayers = function(){
+        return players;
+    }
+
+    getPlayerPositionsCount = function(){
+        return positions.length;
+    }
+
+    getPlayerPositions = function(){
+        return positions;
+    }
+
+    displayMagnificent7(); 
+</script>
+
+<style>
+/* Style would normally extracted */
+.positionContainer{
+    width: 100%;
+    text-align: center;
+}
+.playerContainer{
+    text-align: center;
+    display:inline-block;
+    padding: 10px;
+}
+</style>
