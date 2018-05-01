@@ -28,6 +28,7 @@ This is my attempt at creating a "Mangnificent 7" for the fantasy premier league
 **Potential Enhancements (reword these to ensure they are baseda round their intention. "Quick epic (large story) requirement discussion with product managers could turn these into desired value and not solution**
 - Cover "unhappy path" scenarios with tests and display 
 - Internationalisation and accessibility scan
+- Bench and selection when same score is present
 - Display value 
 - Highlight where included in team
 - Display actual points

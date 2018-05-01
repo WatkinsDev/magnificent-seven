@@ -118,7 +118,7 @@
     }
 
     getPlayerDisplaySpanText = function(currentPlayer){
-        return '<span class="playerContainer">'+currentPlayer.first_name+' '+currentPlayer.second_name+'<br>('+currentPlayer.magnificence+')</span>';
+        return '<span class="playerContainer shirt" style="background:url(http://s252175895.websitehome.co.uk/shirts/'+currentPlayer.team+'.png) no-repeat top left; background-size: contain; background-position: center; "><p class="playerText"><br>'+currentPlayer.second_name+'<br>('+currentPlayer.magnificence+')</p></span>';
     }
 
     addPlayersToDomInAbsenceOfTemplating = function(player){
@@ -169,6 +169,14 @@
 .playerContainer{
     text-align: center;
     display:inline-block;
-    padding: 10px;
+    padding: 5px;
+    height: 20%;
+}
+.playerText{
+    vertical-align: middle;
+    min-width: 100px;
+    min-height: 100px;
+    font-weight: bolder;
+    height: 5%;
 }
 </style>
